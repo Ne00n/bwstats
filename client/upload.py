@@ -17,24 +17,26 @@ if config['settings']['storj']:
     except Exception as e:
         print(e)
 
-payload = {"token":config['token'],"name":config['name']}
+payload = {"token":config['token'],"name":config['name'],"data":{}}
 for key,raw in data.items():
     if key == "vnstat":
-        if not "vnstat" in payload: payload['vnstat'] = 0
+        if not "vnstat" in payload['data']: payload['data']['vnstat'] = 0
         for interface in raw['interfaces']:
-            payload['vnstat'] += interface['traffic']['month'][0]['rx']
-            payload['vnstat'] += interface['traffic']['month'][0]['tx']
+            payload['data']['vnstat'] += interface['traffic']['month'][0]['rx']
+            payload['data']['vnstat'] += interface['traffic']['month'][0]['tx']
     elif key == "storj":
-        if not "storj" in payload: payload["storj"] = {"storage":0,"bandwidth":0}
-        payload['storj']['storage'] = data['storj']['diskSpace']['used']
-        payload['storj']['bandwidth'] = data['storj']['bandwidth']['used']
+        if not "storj" in payload['data']: payload['data']["storj"] = {"storage":0,"bandwidth":0}
+        payload['data']['storj']['storage'] = data['storj']['diskSpace']['used']
+        payload['data']['storj']['bandwidth'] = data['storj']['bandwidth']['used']
 
 print(payload)
 for run in range(4):
     try:
         payload = json.dumps(payload)
         r = requests.post(config['api'], data=payload, headers=headers,allow_redirects=False)
-        if (r.status_code == 200): print("Success")
+        if (r.status_code == 200): 
+            print("Success")
+            break
     except Exception as e:
         print(e)
     time.sleep(2)
