@@ -17,7 +17,7 @@ if config['settings']['storj']:
     except Exception as e:
         print(e)
 
-payload = {"token":config['token']}
+payload = {"token":config['token'],"name":config['name']}
 for key,raw in data.items():
     if key == "vnstat":
         if not "vnstat" in payload: payload['vnstat'] = 0

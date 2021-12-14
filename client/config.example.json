@@ -1,6 +1,7 @@
 {
     "api":"https://stats.domain.com",
-    "token":"vekcoogshyicBecshievNuTwokerAgikjedhudvicDyp",
+    "name":"server1",
+    "token":"token",
     "settings":{
        "storj":true,
        "vnstat":true
