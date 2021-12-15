@@ -54,7 +54,50 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 } else {
     $stats = file_get_contents("stats.json");
-    var_dump($stats);
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+        <head>
+        <meta charset="utf-8">
+        <title>bwstats</title>
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/style.css">
+        </head>
+        <body>
+            <div class="content">
+                <div class="container">
+                    <div class="item">
+                        <h1 class="center">bwstats</h1>
+                    </div>
+                    <div class="item">
+                        <div class="container">
+                            <div class="item w30">
+                                <h1>storj</h1>
+                            </div>
+                            <div class="item w30">
+                                <div class="container">
+                                    <div class="item"><h2>Traffic</h2></div>
+                                    <div class="item"><?php echo (isset($stats['storj']['bandwith']) ? $stats['storj']['bandwith'] / 1e+9 +"GB" : 'numbers yes'); ?></div>
+                                </div>
+                            </div>
+                            <div class="item w30">
+                                <div class="container">
+                                    <div class="item"><h2>Storage</h2></div>
+                                    <div class="item"><?php echo (isset($stats['storj']['storage']) ? $stats['storj']['storage'] / 1e+9 +"GB" : 'numbers yes'); ?></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer center">
+                <p><a href="https://github.com/Ne00n/bwstats">bwstats</a> powered cutting edge json database</p>
+            </div>
+        </body>
+    </html>
+    <?php
 }
 
 
