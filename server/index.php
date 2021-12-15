@@ -8,7 +8,13 @@ function combine($data) {
     foreach ($data as $server) {
         foreach ($server['data'] as $key => $value) {
             if (!(isset($combinated[$key]))) { $combinated[$key] = 0; }
-            $combinated[$key] += $value;
+            if (is_array($value)) {
+                foreach ($value as $vKey => $vValue) {
+                    $combinated[$vKey] = $vValue;
+                }
+            } else {
+                $combinated[$key] += $value;
+            }
         }
     }
     return json_encode($combinated);
