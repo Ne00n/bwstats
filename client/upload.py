@@ -1,7 +1,7 @@
-import subprocess, requests, json, time
+import subprocess, requests, json, time, os
 
 print("Loading config")
-with open('config.json') as f:
+with open(f'{os.path.dirname(os.path.realpath(__file__))}/config.json') as f:
     config = json.load(f)
 
 data = {}
