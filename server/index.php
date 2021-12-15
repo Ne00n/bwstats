@@ -9,7 +9,7 @@ function combine($data) {
         foreach ($server['data'] as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $vKey => $vValue) {
-                    $combinated[$key][$vKey] = $vValue;
+                    $combinated[$key][$vKey] += $vValue;
                 }
             } else {
                 if (!(isset($combinated[$key]))) { $combinated[$key] = 0; }
