@@ -7,12 +7,12 @@ function combine($data) {
     $combinated = array();
     foreach ($data as $server) {
         foreach ($server['data'] as $key => $value) {
-            if (!(isset($combinated[$key]))) { $combinated[$key] = 0; }
             if (is_array($value)) {
                 foreach ($value as $vKey => $vValue) {
-                    $combinated[$vKey] = $vValue;
+                    $combinated[$key][$vKey] = $vValue;
                 }
             } else {
+                if (!(isset($combinated[$key]))) { $combinated[$key] = 0; }
                 $combinated[$key] += $value;
             }
         }
@@ -59,7 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
     }
 } else {
-    $stats = file_get_contents("stats.json");
+    $raw = file_get_contents("stats.json");
+    $stats = json_decode($raw,true);
     ?>
     <!DOCTYPE html>
     <html lang="en">
@@ -85,13 +86,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             <div class="item w30">
                                 <div class="container">
                                     <div class="item"><h2>Traffic</h2></div>
-                                    <div class="item"><?php echo (isset($stats['storj']['bandwith']) ? $stats['storj']['bandwith'] / 1e+9 +"GB" : 'numbers yes'); ?></div>
+                                    <div class="item"><?php echo (isset($stats['storj']['bandwidth']) ? round($stats['storj']['bandwidth'] / 1e+9,1) : 'n/a'); ?>GB</div>
                                 </div>
                             </div>
                             <div class="item w30">
                                 <div class="container">
                                     <div class="item"><h2>Storage</h2></div>
-                                    <div class="item"><?php echo (isset($stats['storj']['storage']) ? $stats['storj']['storage'] / 1e+9 +"GB" : 'numbers yes'); ?></div>
+                                    <div class="item"><?php echo (isset($stats['storj']['storage']) ? round($stats['storj']['storage'] / 1e+9,1) : 'n/a'); ?>GB</div>
                                 </div>
                             </div>
                         </div>
