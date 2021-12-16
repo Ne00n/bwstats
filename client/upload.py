@@ -31,9 +31,9 @@ for key,raw in data.items():
         payload['data']['storj']['bandwidth'] = data['storj']['bandwidth']['used']
 
 print(payload)
+payload = json.dumps(payload)
 for run in range(4):
     try:
-        payload = json.dumps(payload)
         r = requests.post(config['api'], data=payload, headers=headers,allow_redirects=False)
         if (r.status_code == 200): 
             print("Success")
