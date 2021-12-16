@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 </div>
             </div>
             <div class="footer center">
-                <p><a href="https://github.com/Ne00n/bwstats">bwstats</a> powered by cutting edge json database</p>
+                <p><a href="https://github.com/Ne00n/bwstats" target="_blank">bwstats</a> powered by cutting edge json database</p>
             </div>
         </body>
     </html>
