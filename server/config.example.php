@@ -1,3 +1,3 @@
 <?php
 
-define("_token","token");
+define("_tokens",array("token1","token2"));

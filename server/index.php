@@ -9,6 +9,7 @@ function combine($data) {
         foreach ($server['data'] as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $vKey => $vValue) {
+                    if (!(isset($combinated[$key][$vKey]))) { $combinated[$key][$vKey] = 0; }
                     $combinated[$key][$vKey] += $vValue;
                 }
             } else {
@@ -26,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $payload = json_decode($payload,true);
     if (json_last_error() !== 0) {  http_response_code(420); die(); }
     if (!isset($payload['name']) or !isset($payload['data']) or !isset($payload['token'])) {  http_response_code(400); die(); }
-    if ($payload['token'] != _token) {  http_response_code(401); die(); }
+    if (strlen($payload['token'] > 60)) { http_response_code(420); die(); }
+    if (!in_array($payload['token'],_tokens)) {  http_response_code(401); die(); }
     $i = 0;
     while ($i <= 15) {
         $handle = fopen($file,"c+");
