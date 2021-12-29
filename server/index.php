@@ -9,8 +9,10 @@ function combine($data) {
         foreach ($server['data'] as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $vKey => $vValue) {
-                    if (!(isset($combinated[$key][$vKey]))) { $combinated[$key][$vKey] = 0; }
-                    $combinated[$key][$vKey] += $vValue;
+                    if (!(isset($combinated[$key]['current'][$vKey]))) { $combinated[$key]['current'][$vKey] = 0; }
+                    if (!(isset($combinated[$key][strtotime('today midnight')][$vKey]))) { $combinated[$key][strtotime('today midnight')][$vKey] = 0; }
+                    $combinated[$key]['current'][$vKey] += $vValue;
+                    $combinated[$key][strtotime('today midnight')][$vKey] += $vValue;
                 }
             } else {
                 if (!(isset($combinated[$key]))) { $combinated[$key] = 0; }
