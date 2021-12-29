@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <meta name="author" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="js/chart.js"></script>
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/style.css?v=2">
         <script>
             labels = [<?php echo implode(",",getLabels($stats)); ?>]
             storage = [<?php echo implode(",",getData($stats,'storage')); ?>]
