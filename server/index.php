@@ -90,13 +90,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             <div class="item w30">
                                 <div class="container">
                                     <div class="item"><h2>Traffic</h2></div>
-                                    <div class="item"><?php echo (isset($stats['storj']['bandwidth']) ? round($stats['storj']['bandwidth'] / 1e+9,1) : 'n/a'); ?>GB</div>
+                                    <div class="item"><?php echo (isset($stats['storj']['current']['bandwidth']) ? round($stats['storj']['current']['bandwidth'] / 1e+9,1) : 'n/a'); ?>GB</div>
                                 </div>
                             </div>
                             <div class="item w30">
                                 <div class="container">
                                     <div class="item"><h2>Storage</h2></div>
-                                    <div class="item"><?php echo (isset($stats['storj']['storage']) ? round($stats['storj']['storage'] / 1e+9,1) : 'n/a'); ?>GB</div>
+                                    <div class="item"><?php echo (isset($stats['storj']['current']['storage']) ? round($stats['storj']['current']['storage'] / 1e+9,1) : 'n/a'); ?>GB</div>
                                 </div>
                             </div>
                         </div>
