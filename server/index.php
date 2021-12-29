@@ -23,6 +23,24 @@ function combine($data) {
     return json_encode($combinated);
 }
 
+function getLabels($stats) {
+    $response = array();
+    foreach ($stats['storj'] as $key => $line) {
+        if ($key == "current") { continue; }
+        $response[] = date('d.m', $key);
+    }
+    return $response;
+}
+
+function getData($stats,$vkey) {
+    $response = array();
+    foreach ($stats['storj'] as $key => $line) {
+        if ($key == "current") { continue; }
+        $response[] = round($line[$vkey] / 1e+9,1);
+    }
+    return $response;
+}
+
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $payload = file_get_contents('php://input');
     if (strlen($payload) > 10000) {  http_response_code(413); die(); }
@@ -74,7 +92,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <meta name="description" content="">
         <meta name="author" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="js/chart.js"></script>
         <link rel="stylesheet" href="css/style.css">
+        <script>
+            labels = [<?php echo implode(",",getLabels($stats)); ?>]
+            storage = [<?php echo implode(",",getData($stats,'storage')); ?>]
+            traffic = [<?php echo implode(",",getData($stats,'bandwidth')); ?>]
+        </script>
         </head>
         <body>
             <div class="content">
@@ -100,6 +124,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                 </div>
                             </div>
                         </div>
+                        <div class="container">
+                            <div class="item w50"><canvas id="traffic"></canvas></div>
+                            <div class="item w50"><canvas id="storage"></canvas></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -107,6 +135,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <p><a href="https://github.com/Ne00n/bwstats" target="_blank">bwstats</a> powered by cutting edge json database</p>
             </div>
         </body>
+    <footer>
+        <script src="js/stats.js"></script>
+    </footer>
     </html>
     <?php
 }

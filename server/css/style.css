@@ -56,6 +56,14 @@ body {
     width: 30%;
 }
 
+.w50 {
+    width: 50%;
+}
+
+canvas {
+    max-width: 500px;
+}
+
 .center {
     text-align: center;
     vertical-align: middle;
