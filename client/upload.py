@@ -28,6 +28,7 @@ for key,raw in data.items():
     elif key == "storj":
         if not "storj" in payload['data']: payload['data']["storj"] = {"storage":0,"bandwidth":0}
         payload['data']['storj']['storage'] = data['storj']['diskSpace']['used']
+        payload['data']['storj']['storageAvailable'] = data['storj']['diskSpace']['available']
         payload['data']['storj']['bandwidth'] = data['storj']['bandwidth']['used']
 
 print(payload)
