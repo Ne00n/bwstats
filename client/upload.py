@@ -21,10 +21,10 @@ if config['settings']['storj']:
 payload = {"token":config['token'],"name":config['name'],"data":{}}
 for key,raw in data.items():
     if key == "vnstat":
-        if not "vnstat" in payload['data']: payload['data']['vnstat'] = 0
+        if not "vnstat" in payload['data']: payload['data']['vnstat'] = {"rx":0,"tx":0}
         for interface in raw['interfaces']:
-            payload['data']['vnstat'] += interface['traffic']['month'][0]['rx']
-            payload['data']['vnstat'] += interface['traffic']['month'][0]['tx']
+            payload['data']['vnstat']['rx'] += interface['traffic']['month'][0]['rx']
+            payload['data']['vnstat']['tx'] += interface['traffic']['month'][0]['tx']
     elif key == "storj":
         if not "storj" in payload['data']: payload['data']["storj"] = {"storage":0,"bandwidth":0}
         payload['data']['storj']['storage'] = data['storj']['diskSpace']['used']

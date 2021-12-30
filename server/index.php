@@ -6,17 +6,12 @@ $file = "servers.json";
 function combine($data) {
     $combinated = array();
     foreach ($data as $server) {
-        foreach ($server['data'] as $key => $value) {
-            if (is_array($value)) {
-                foreach ($value as $vKey => $vValue) {
-                    if (!(isset($combinated[$key]['current'][$vKey]))) { $combinated[$key]['current'][$vKey] = 0; }
-                    if (!(isset($combinated[$key][strtotime('today midnight')][$vKey]))) { $combinated[$key][strtotime('today midnight')][$vKey] = 0; }
-                    $combinated[$key]['current'][$vKey] += $vValue;
-                    $combinated[$key][strtotime('today midnight')][$vKey] += $vValue;
+        foreach ($server['data'] as $window => $block) {
+            foreach ($block as $cat => $value) {
+                foreach ($value as $type => $vValue) {
+                    if (!(isset($combinated[$window][$cat][$type]))) { $combinated[$window][$cat][$type] = 0; }
+                    $combinated[$window][$cat][$type] += $vValue;
                 }
-            } else {
-                if (!(isset($combinated[$key]))) { $combinated[$key] = 0; }
-                $combinated[$key] += $value;
             }
         }
     }
@@ -25,18 +20,29 @@ function combine($data) {
 
 function getLabels($stats) {
     $response = array();
-    foreach ($stats['storj'] as $key => $line) {
-        if ($key == "current") { continue; }
-        $response[] = date('d.m', $key);
+    foreach ($stats as $window => $block) {
+        if ($window == "current") { continue; }
+        $response[] = date('d.m', $window);
     }
     return $response;
 }
 
-function getData($stats,$vkey) {
+function getData($stats,$cat,$var) {
     $response = array();
-    foreach ($stats['storj'] as $key => $line) {
+    foreach ($stats as $window => $block) {
         if ($key == "current") { continue; }
-        $response[] = round($line[$vkey] / 1e+9,1);
+        foreach ($block as $category => $data) {
+            if ($category != $cat) { continue; }
+            $response[] = round($data[$var] / 1e+9,1);
+        }
+    }
+    return $response;
+}
+
+function prepare($payload) {
+    $response = array();
+    foreach ($payload['data'] as $key => $value) {
+        $response['current'][$key] = $value;
     }
     return $response;
 }
@@ -59,8 +65,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $raw = fread($handle,filesize($file));
             $data = json_decode($raw,true);
             //Load it
-            if ($payload['name'] != $data) { $data[$payload['name']]['data'] = "";}
-            $data[$payload['name']]['data'] = $payload['data'];
+            if ($payload['name'] != $data) { $data[$payload['name']]['data'] = array();}
+            $fresh = prepare($payload);
+            $data[$payload['name']]['data']['current'] = $fresh['current'];
+            $data[$payload['name']]['data'][strtotime('today midnight')] = $fresh['current'];
             file_put_contents("stats.json",combine($data));
             //Truncate
             ftruncate($handle, 0);
@@ -96,8 +104,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <link rel="stylesheet" href="css/style.css?v=2">
         <script>
             labels = [<?php echo implode(",",getLabels($stats)); ?>]
-            storage = [<?php echo implode(",",getData($stats,'storage')); ?>]
-            traffic = [<?php echo implode(",",getData($stats,'bandwidth')); ?>]
+            storage = [<?php echo implode(",",getData($stats,'storj','storage')); ?>]
+            traffic = [<?php echo implode(",",getData($stats,'storj','bandwidth')); ?>]
         </script>
         </head>
         <body>
@@ -114,13 +122,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             <div class="item w30">
                                 <div class="container">
                                     <div class="item"><h2>Traffic</h2></div>
-                                    <div class="item"><?php echo (isset($stats['storj']['current']['bandwidth']) ? round($stats['storj']['current']['bandwidth'] / 1e+9,1) : 'n/a'); ?>GB</div>
+                                    <div class="item"><?php echo (isset($stats['current']['storj']['bandwidth']) ? round($stats['current']['storj']['bandwidth'] / 1e+9,1) : 'n/a'); ?>GB</div>
                                 </div>
                             </div>
                             <div class="item w30">
                                 <div class="container">
                                     <div class="item"><h2>Storage</h2></div>
-                                    <div class="item"><?php echo (isset($stats['storj']['current']['storage']) ? round($stats['storj']['current']['storage'] / 1e+9,1) : 'n/a'); ?>GB</div>
+                                    <div class="item"><?php echo (isset($stats['current']['storj']['storage']) ? round($stats['current']['storj']['storage'] / 1e+9,1) : 'n/a'); ?>GB</div>
                                 </div>
                             </div>
                         </div>
