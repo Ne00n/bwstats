@@ -122,13 +122,18 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             <div class="item w30">
                                 <div class="container">
                                     <div class="item"><h2>Traffic</h2></div>
-                                    <div class="item"><?php echo (isset($stats['current']['storj']['bandwidth']) ? round($stats['current']['storj']['bandwidth'] / 1e+9,1) : 'n/a'); ?>GB</div>
+                                    <div class="item">
+                                        <?php echo (isset($stats['current']['storj']['bandwidth']) ? round($stats['current']['storj']['bandwidth'] / 1e+9,1) : 'n/a'); ?>GB
+                                    </div>
                                 </div>
                             </div>
                             <div class="item w30">
                                 <div class="container">
                                     <div class="item"><h2>Storage</h2></div>
-                                    <div class="item"><?php echo (isset($stats['current']['storj']['storage']) ? round($stats['current']['storj']['storage'] / 1e+9,1) : 'n/a'); ?>GB</div>
+                                    <div class="item">
+                                        <?php echo (isset($stats['current']['storj']['storage']) ? round($stats['current']['storj']['storage'] / 1e+9,1) : 'n/a'); ?>GB of 
+                                        <?php echo (isset($stats['current']['storj']['storageAvailable']) ? round($stats['current']['storj']['storageAvailable'] / 1e+12,1) : 'n/a'); ?>TB
+                                    </div>
                                 </div>
                             </div>
                         </div>
