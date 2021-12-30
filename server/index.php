@@ -30,7 +30,7 @@ function getLabels($stats) {
 function getData($stats,$cat,$var) {
     $response = array();
     foreach ($stats as $window => $block) {
-        if ($key == "current") { continue; }
+        if ($window == "current") { continue; }
         foreach ($block as $category => $data) {
             if ($category != $cat) { continue; }
             $response[] = round($data[$var] / 1e+9,1);
