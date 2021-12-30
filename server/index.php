@@ -15,7 +15,7 @@ function combine($data) {
             }
         }
     }
-    return json_encode($combinated);
+    return json_encode($combinated,JSON_PRETTY_PRINT);
 }
 
 function getLabels($stats) {
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             //Reset pointer
             rewind($handle);
             //Encode data
-            $json = json_encode($data);
+            $json = json_encode($data,JSON_PRETTY_PRINT);
             //Write
             fwrite($handle,$json);
             fflush($handle);
