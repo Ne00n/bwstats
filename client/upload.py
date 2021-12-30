@@ -26,7 +26,7 @@ for key,raw in data.items():
             payload['data']['vnstat']['rx'] += interface['traffic']['month'][0]['rx']
             payload['data']['vnstat']['tx'] += interface['traffic']['month'][0]['tx']
     elif key == "storj":
-        if not "storj" in payload['data']: payload['data']["storj"] = {"storage":0,"bandwidth":0}
+        if not "storj" in payload['data']: payload['data']["storj"] = {"storage":0,"storageAvailable":0,"bandwidth":0}
         payload['data']['storj']['storage'] = data['storj']['diskSpace']['used']
         payload['data']['storj']['storageAvailable'] = data['storj']['diskSpace']['available']
         payload['data']['storj']['bandwidth'] = data['storj']['bandwidth']['used']
