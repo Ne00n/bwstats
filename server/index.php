@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <meta name="author" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="js/chart.js"></script>
-        <link rel="stylesheet" href="css/style.css?v=2">
+        <link rel="stylesheet" href="css/style.css?v=3">
         <script>
             labels = [<?php echo implode(",",getLabels($stats)); ?>]
             storage = [<?php echo implode(",",getData($stats,'storj','storage')); ?>]
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <div class="content">
                 <div class="container">
                     <div class="item">
-                        <h1 class="center">bwstats</h1>
+                        <a href="index.php" class="white"><h1 class="center">bwstats</h1></a>
                     </div>
                     <div class="item">
                         <div class="container">
