@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $raw = fread($handle,filesize($file));
             $data = json_decode($raw,true);
             //Load it
-            if ($payload['name'] != $data) { $data[$payload['name']]['data'] = array();}
+            if (!array_key_exists($payload['name'], $data)) { $data[$payload['name']]['data'] = array();}
             $fresh = prepare($payload);
             $data[$payload['name']]['data']['current'] = $fresh['current'];
             $data[$payload['name']]['data'][strtotime('today midnight')] = $fresh['current'];
