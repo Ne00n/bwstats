@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             </div>
         </body>
     <footer>
-        <script src="js/stats.js"></script>
+        <script src="js/stats.js?v=2"></script>
     </footer>
     </html>
     <?php

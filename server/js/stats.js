@@ -11,7 +11,7 @@ const trafficData = {
 const storageData = {
     labels: labels,
     datasets: [{
-      label: 'Traffic',
+      label: 'Storage',
       borderColor: 'rgb(75, 192, 192)',
       data: storage,
     }]
