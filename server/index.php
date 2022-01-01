@@ -22,7 +22,8 @@ function getLabels($stats) {
     $response = array();
     foreach ($stats as $window => $block) {
         if ($window == "current") { continue; }
-        $response[] = date('d.m', $window);
+        $date = date('d.m', $window);
+        $response[] = "'{$date}'";
     }
     return $response;
 }
