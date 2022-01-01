@@ -34,7 +34,7 @@ function getData($stats,$cat,$var) {
         if ($window == "current") { continue; }
         foreach ($block as $category => $data) {
             if ($category != $cat) { continue; }
-            $response[] = size($data[$var]);
+            $response[] = size($data,$var)['value'];
         }
     }
     return $response;
@@ -48,11 +48,15 @@ function prepare($payload) {
     return $response;
 }
 
-function size($bytes) {
-    if ($bytes >= 1e+12) {
-        return round($bytes / 1e+12,1);
+function size($stats,$field) {
+    if (isset($stats[$field])) {
+        if ($stats[$field] >= 1e+12) {
+            return array('value' => round($stats[$field] / 1e+12,1),'type' => 'TB');
+        } else {
+            return array('value' => round($stats[$field] / 1e+9,1),'type' => 'GB');
+        }
     } else {
-        return round($bytes / 1e+9,1);
+        return array('value' => 0,'type' => 'GB');
     }
 }
 
@@ -132,7 +136,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                 <div class="container">
                                     <div class="item"><h2>Traffic</h2></div>
                                     <div class="item">
-                                        <?php echo (isset($stats['current']['storj']['bandwidth']) ? size($stats['current']['storj']['bandwidth']) : 'n/a'); ?>GB
+                                        <?php 
+                                        $bandwidth = size($stats['current']['storj'],'bandwidth');
+                                        echo "{$bandwidth['value']} {$bandwidth['type']}";
+                                        ?>
                                     </div>
                                 </div>
                             </div>
@@ -140,8 +147,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                 <div class="container">
                                     <div class="item"><h2>Storage</h2></div>
                                     <div class="item">
-                                        <?php echo (isset($stats['current']['storj']['storage']) ? size($stats['current']['storj']['storage']) : 'n/a'); ?>GB of 
-                                        <?php echo (isset($stats['current']['storj']['storageAvailable']) ? size($stats['current']['storj']['storageAvailable']) : 'n/a'); ?>TB
+                                        <?php 
+                                        $storage = size($stats['current']['storj'],'storage');
+                                        $available = size($stats['current']['storj'],'storageAvailable');
+                                        echo "{$storage['value']} {$storage['type']} of {$available['value']} {$available['type']}";
+                                        ?>
                                     </div>
                                 </div>
                             </div>
