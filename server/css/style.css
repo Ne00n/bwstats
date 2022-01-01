@@ -86,7 +86,11 @@ canvas {
 a {
     text-decoration: none;
     color:orange;
-  }
+}
+
+smol {
+    font-size: 0.5em;
+}
 
 .white {
     color: white;

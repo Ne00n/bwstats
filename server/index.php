@@ -15,13 +15,14 @@ function combine($data) {
             }
         }
     }
+    $combinated['nodes'] = getNodes($data);
     return json_encode($combinated,JSON_PRETTY_PRINT);
 }
 
 function getLabels($stats) {
     $response = array();
     foreach ($stats as $window => $block) {
-        if ($window == "current") { continue; }
+        if ($window == "current" or $window == "nodes") { continue; }
         $date = date('d.m', $window);
         $response[] = "'{$date}'";
     }
@@ -58,6 +59,14 @@ function size($stats,$field) {
     } else {
         return array('value' => 0,'type' => 'GB');
     }
+}
+
+function getNodes($data) {
+    $alive = 0;
+    foreach ($data as $node) {
+        if (isset($node['data'][strtotime('today midnight')])) { $alive += 1; }
+    }
+    return array('total' => count($data),'alive' => $alive);
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -114,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <meta name="author" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="js/chart.js"></script>
-        <link rel="stylesheet" href="css/style.css?v=3">
+        <link rel="stylesheet" href="css/style.css?v=4">
         <script>
             labels = [<?php echo implode(",",getLabels($stats)); ?>]
             storage = [<?php echo implode(",",getData($stats,'storj','storage')); ?>]
@@ -130,7 +139,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     <div class="item">
                         <div class="container">
                             <div class="item w30">
-                                <h1>storj</h1>
+                                <?php
+                                echo "<h1>storj <smol>{$stats['nodes']['alive']}/{$stats['nodes']['total']} nodes</smol></h1>"
+                                ?>
                             </div>
                             <div class="item w30">
                                 <div class="container">
