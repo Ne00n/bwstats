@@ -20,13 +20,57 @@ const storageData = {
 const trafficConfig = {
     type: 'line',
     data: trafficData,
-    options: { plugins: { legend: { display: false }, } }
+    options: { 
+        plugins: { 
+            legend: { 
+                labels: {
+                    boxWidth: 0
+                },
+            }, 
+        },
+        scales: {
+            x: {
+                ticks: {
+                    maxTicksLimit: 8
+                },
+            },
+            y: {
+                ticks: {
+                    callback: function(value, index, values) {
+                        return value + 'GB';
+                    }
+                }
+            }
+        } 
+    }
 };
 
 const storageConfig = {
     type: 'line',
     data: storageData,
-    options: { plugins: { legend: { display: false }, } }
+    options: { 
+        plugins: { 
+            legend: { 
+                labels: {
+                    boxWidth: 0
+                },
+            }, 
+        },
+        scales: {
+            x: {
+                ticks: {
+                    maxTicksLimit: 8
+                },
+            },
+            y: {
+                ticks: {
+                    callback: function(value, index, values) {
+                        return value + 'GB';
+                    }
+                }
+            }
+        } 
+    }
 };
 
 Chart.defaults.color = "#fff";

@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <meta name="author" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="js/chart.js"></script>
-        <link rel="stylesheet" href="css/style.css?v=4">
+        <link rel="stylesheet" href="css/style.css?v=5">
         <script>
             labels = [<?php echo implode(",",getLabels($stats)); ?>]
             storage = [<?php echo implode(",",getData($stats,'storj','storage')); ?>]
@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                     <div class="item">
                                         <?php 
                                         $bandwidth = size($stats['current']['storj'],'bandwidth');
-                                        echo "{$bandwidth['value']} {$bandwidth['type']}";
+                                        echo "{$bandwidth['value']}{$bandwidth['type']}";
                                         ?>
                                     </div>
                                 </div>
@@ -161,15 +161,17 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                         <?php 
                                         $storage = size($stats['current']['storj'],'storage');
                                         $available = size($stats['current']['storj'],'storageAvailable');
-                                        echo "{$storage['value']} {$storage['type']} of {$available['value']} {$available['type']}";
+                                        echo "{$storage['value']}{$storage['type']} of {$available['value']}{$available['type']}";
                                         ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="container">
-                            <div class="item w50"><canvas id="traffic"></canvas></div>
-                            <div class="item w50"><canvas id="storage"></canvas></div>
+                            <div class="item w100"><canvas id="traffic"></canvas></div>
+                        </div>
+                        <div class="container">
+                            <div class="item w100"><canvas id="storage"></canvas></div>
                         </div>
                     </div>
                 </div>
@@ -179,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             </div>
         </body>
     <footer>
-        <script src="js/stats.js?v=2"></script>
+        <script src="js/stats.js?v=3"></script>
     </footer>
     </html>
     <?php
