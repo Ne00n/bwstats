@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import subprocess, requests, json, time, os
+import subprocess, requests, json, time, os, re
 
 print("Loading config")
 with open(f'{os.path.dirname(os.path.realpath(__file__))}/config.json') as f:
@@ -18,6 +18,10 @@ if config['settings']['storj']:
     except Exception as e:
         print(e)
 
+if config['settings']['scprime']:
+    scp = subprocess.check_output(["/home/scp/current/spc","host"])
+    data['scprime'] = re.findall("Storage:.*?([0-9.]+).(GB|TB).\(([0-9.]+).(GB|TB).used\)",scp.decode('utf-8'), re.MULTILINE)
+
 payload = {"token":config['token'],"name":config['name'],"data":{}}
 for key,raw in data.items():
     if key == "vnstat":
@@ -30,6 +34,10 @@ for key,raw in data.items():
         payload['data']['storj']['storage'] = data['storj']['diskSpace']['used']
         payload['data']['storj']['storageAvailable'] = data['storj']['diskSpace']['available']
         payload['data']['storj']['bandwidth'] = data['storj']['bandwidth']['used']
+    elif key == "scprime":
+        if not "scprime" in payload['data']: payload['data']["scprime"] = {"storage":0,"storageAvailable":0}
+        payload['data']['scprime']['storage'] = data['scprime'][0][2]
+        payload['data']['scprime']['storageAvailable'] = data['scprime'][0][0]
 
 print(payload)
 payload = json.dumps(payload)

@@ -4,6 +4,7 @@
     "token":"token",
     "settings":{
        "storj":true,
-       "vnstat":true
+       "vnstat":true,
+       "scprime":true
     }
  }
