@@ -27,6 +27,21 @@ const storageData = {
     }]
 };
 
+const scprime = {
+    labels: scprimeLabels,
+    datasets: [{
+      label: 'Storage',
+      borderColor: 'rgb(75, 192, 192)',
+      data: scprimeStorage,
+      fill: {
+        target: 'origin',
+        above: 'rgb(255, 255, 255,0.3)', 
+        below: 'rgb(255, 255, 255)'   
+      }
+    }]
+};
+
+
 const trafficConfig = {
     type: 'line',
     data: trafficData,
@@ -98,6 +113,41 @@ const storageConfig = {
     }
 };
 
+const scprimeConfig = {
+    type: 'line',
+    data: scprime,
+    options: { 
+        plugins: { 
+            legend: { 
+                labels: {
+                    boxWidth: 0
+                },
+            }, 
+        },
+        elements: {
+            point:{
+                radius: 0
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    maxTicksLimit: 8,
+                    maxRotation: 0,
+                    minRotation: 0
+                },
+            },
+            y: {
+                ticks: {
+                    callback: function(value, index, values) {
+                        return value + 'GB';
+                    }
+                }
+            }
+        } 
+    }
+};
+
 Chart.defaults.color = "#fff";
 
 var trafficChart = new Chart(
@@ -108,4 +158,9 @@ var trafficChart = new Chart(
 var storageChart = new Chart(
     document.getElementById('storage'),
     storageConfig
+);
+
+var storageChart = new Chart(
+    document.getElementById('scprime'),
+    scprimeConfig
 );

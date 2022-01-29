@@ -8,6 +8,7 @@ function combine($data) {
     foreach ($data as $server) {
         foreach ($server['data'] as $window => $block) {
             foreach ($block as $cat => $value) {
+                $combinated[$cat.'nodes'] = getNodes($data,$cat);
                 foreach ($value as $type => $vValue) {
                     if (!(isset($combinated[$window][$cat][$type]))) { $combinated[$window][$cat][$type] = 0; }
                     $combinated[$window][$cat][$type] += $vValue;
@@ -15,13 +16,13 @@ function combine($data) {
             }
         }
     }
-    $combinated['nodes'] = getNodes($data);
     return json_encode($combinated,JSON_PRETTY_PRINT);
 }
 
-function getLabels($stats) {
+function getLabels($stats,$cat = "storj") {
     $response = array();
     foreach ($stats as $window => $block) {
+        if (!isset($block[$cat])) { continue; }
         if ($window == "current" or $window == "nodes") { continue; }
         $date = date('d.m', $window);
         $response[] = "'{$date}'";
@@ -53,18 +54,22 @@ function size($stats,$field) {
     if (isset($stats[$field])) {
         if ($stats[$field] >= 1e+12) {
             return array('value' => round($stats[$field] / 1e+12,1),'type' => 'TB');
-        } else {
+        } elseif ($stats[$field] >= 1e+9) {
             return array('value' => round($stats[$field] / 1e+9,1),'type' => 'GB');
+        } elseif ($stats[$field] >= 1000) {
+                return array('value' => round($stats[$field] / 1000,1),'type' => 'TB');
+        } else {
+            return array('value' => round($stats[$field],1),'type' => 'GB');
         }
     } else {
         return array('value' => 0,'type' => 'GB');
     }
 }
 
-function getNodes($data) {
+function getNodes($data,$cat) {
     $alive = 0;
     foreach ($data as $node) {
-        if (isset($node['data'][strtotime('today midnight')])) { $alive += 1; }
+        if (isset($node['data'][strtotime('today midnight')][$cat])) { $alive += 1; }
     }
     return array('total' => count($data),'alive' => $alive);
 }
@@ -126,13 +131,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <link rel="stylesheet" href="css/style.css?v=6">
         <script>
             labels = [<?php echo implode(",",getLabels($stats)); ?>]
+            scprimeLabels = [<?php echo implode(",",getLabels($stats,"scprime")); ?>]
             storage = [<?php echo implode(",",getData($stats,'storj','storage')); ?>]
             traffic = [<?php echo implode(",",getData($stats,'storj','bandwidth')); ?>]
+            scprimeStorage = [<?php echo implode(",",getData($stats,'scprime','storage')); ?>]
         </script>
         </head>
         <body>
             <div class="content">
-                <div class="container">
+                <div class="container base">
                     <div class="item">
                         <a href="index.php" class="white"><h1 class="center">bwstats</h1></a>
                     </div>
@@ -140,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                         <div class="container">
                             <div class="item w30">
                                 <?php
-                                echo "<h1>storj <smol>{$stats['nodes']['alive']}/{$stats['nodes']['total']} nodes</smol></h1>"
+                                echo "<h1>storj <smol>{$stats['storjnodes']['alive']}/{$stats['storjnodes']['total']} nodes</smol></h1>"
                                 ?>
                             </div>
                             <div class="item w30">
@@ -168,10 +175,34 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             </div>
                         </div>
                         <div class="container">
-                            <div class="item w100"><canvas id="traffic"></canvas></div>
+                            <div class="item"><canvas id="traffic"></canvas></div>
                         </div>
                         <div class="container">
-                            <div class="item w100"><canvas id="storage"></canvas></div>
+                            <div class="item"><canvas id="storage"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="container">
+                            <div class="item w30">
+                                <?php
+                                echo "<h1>scprime <smol>{$stats['scprimenodes']['alive']}/{$stats['scprimenodes']['total']} nodes</smol></h1>"
+                                ?>
+                            </div>
+                            <div class="item w30">
+                                <div class="container">
+                                    <div class="item"><h2>Storage</h2></div>
+                                    <div class="item">
+                                        <?php 
+                                        $storage = size($stats['current']['scprime'],'storage');
+                                        $available = size($stats['current']['scprime'],'storageAvailable');
+                                        echo "{$storage['value']}{$storage['type']} of {$available['value']}{$available['type']}";
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div class="item"><canvas id="scprime"></canvas></div>
                         </div>
                     </div>
                 </div>

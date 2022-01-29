@@ -46,10 +46,15 @@ body {
     flex-wrap: wrap;
     justify-content: space-between;
 }
+
+.base {
+    margin-left: 20px;
+    margin-right: 20px;
+}
   
 .item {
     width: 100%;
-    margin-bottom: 2%;
+    margin-bottom: 1%;
 }
 
 .w30 {
@@ -65,8 +70,7 @@ body {
 }
 
 canvas {
-    max-width: 1000px;
-    max-height: 220px;
+    max-height: 160px;
 }
 
 .center {
