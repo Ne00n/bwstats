@@ -5,6 +5,11 @@ const trafficData = {
       label: 'Traffic',
       borderColor: 'rgb(75, 192, 192)',
       data: traffic,
+      fill: {
+        target: 'origin',
+        above: 'rgb(255, 255, 255,0.3)',
+        below: 'rgb(255, 255, 255)'    
+      }
     }]
 };
 
@@ -14,12 +19,18 @@ const storageData = {
       label: 'Storage',
       borderColor: 'rgb(75, 192, 192)',
       data: storage,
+      fill: {
+        target: 'origin',
+        above: 'rgb(255, 255, 255,0.3)', 
+        below: 'rgb(255, 255, 255)'   
+      }
     }]
 };
 
 const trafficConfig = {
     type: 'line',
     data: trafficData,
+    fill: true,
     options: { 
         plugins: { 
             legend: { 
@@ -28,10 +39,17 @@ const trafficConfig = {
                 },
             }, 
         },
+        elements: {
+            point:{
+                radius: 0
+            }
+        },
         scales: {
             x: {
                 ticks: {
-                    maxTicksLimit: 8
+                    maxTicksLimit: 8,
+                    maxRotation: 0,
+                    minRotation: 0
                 },
             },
             y: {
@@ -56,10 +74,17 @@ const storageConfig = {
                 },
             }, 
         },
+        elements: {
+            point:{
+                radius: 0
+            }
+        },
         scales: {
             x: {
                 ticks: {
-                    maxTicksLimit: 8
+                    maxTicksLimit: 8,
+                    maxRotation: 0,
+                    minRotation: 0
                 },
             },
             y: {
