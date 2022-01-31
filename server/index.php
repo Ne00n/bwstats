@@ -30,16 +30,22 @@ function getLabels($stats,$cat = "storj") {
     return $response;
 }
 
-function getData($stats,$cat,$var) {
+function getData($stats,$cat,$var,$targetWindow=0) {
     $response = array();
     foreach ($stats as $window => $block) {
         if ($window == "current") { continue; }
+        if ($window < $targetWindow) { continue; }
         foreach ($block as $category => $data) {
             if ($category != $cat) { continue; }
             $response[] = size($data,$var)['value'];
         }
     }
     return $response;
+}
+
+function getLastDays($stats,$cat,$var,$days=4) {
+    $scprime = getData($stats,$cat,$var,strtotime('today midnight') - (86400 * $days));
+    return size(array("total" => $scprime[count($scprime) -1] - $scprime[0]),"total");
 }
 
 function prepare($payload) {
@@ -128,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <meta name="author" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="js/chart.js"></script>
-        <link rel="stylesheet" href="css/style.css?v=6">
+        <link rel="stylesheet" href="css/style.css?v=8">
         <script>
             labels = [<?php echo implode(",",getLabels($stats)); ?>]
             scprimeLabels = [<?php echo implode(",",getLabels($stats,"scprime")); ?>]
@@ -163,7 +169,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             </div>
                             <div class="item w30">
                                 <div class="container">
-                                    <div class="item"><h2>Storage</h2></div>
+                                    <?php
+                                    $twoDays = getLastDays($stats,'storj','storage',2);
+                                    echo '<div class="item"><h2>Storage <med>'.$twoDays["value"].$twoDays["type"].' 48H</med></h2></div>';
+                                    ?>
                                     <div class="item">
                                         <?php 
                                         $storage = size($stats['current']['storj'],'storage');
@@ -190,7 +199,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             </div>
                             <div class="item w30">
                                 <div class="container">
-                                    <div class="item"><h2>Storage</h2></div>
+                                    <?php
+                                    $twoDays = getLastDays($stats,'scprime','storage',2);
+                                    echo '<div class="item"><h2>Storage <med>'.$twoDays["value"].$twoDays["type"].' 48H</med></h2></div>';
+                                    ?>
                                     <div class="item">
                                         <?php 
                                         $storage = size($stats['current']['scprime'],'storage');

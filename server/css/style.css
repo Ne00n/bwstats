@@ -101,6 +101,10 @@ smol {
     font-size: 0.5em;
 }
 
+med {
+    font-size: 0.7em;
+}
+
 .white {
     color: white;
 }
